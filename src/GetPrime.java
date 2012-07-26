@@ -1,5 +1,4 @@
 import java.io.IOException;
-import java.util.Iterator;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
@@ -46,24 +45,6 @@ public class GetPrime extends Configured implements Tool {
                 Context context) throws IOException, InterruptedException {
             for (IntWritable val : values)
                 context.write(new Text("prime"), val);
-            /*
-             * int actPrim = 0; int maxPrim = 0; for (IntWritable j : values) {
-             * actPrim = j.get(); break; } for (IntWritable j : values) {
-             * maxPrim = j.get(); } while(actPrim < maxPrim) { boolean
-             * nextPrimeSet = false; int tmpPrime = 0; for (IntWritable i :
-             * values) { if (!nextPrimeSet && i.get() > actPrim) { tmpPrime =
-             * i.get(); nextPrimeSet = true; } System.out.println("max: " +
-             * maxPrim + " actwhile: " + actPrim + " actfor " + i.get());
-             * context.write(new Text("quwert"), new IntWritable(actPrim
-             * i.get())); } System.out.println("max: " + maxPrim + " actwhile: "
-             * + actPrim + " actfor "); actPrim = tmpPrime; }
-             */
-            // for (IntWritable i : values) {
-            // for (IntWritable j : values) {
-            // context.write(new Text("qwert"), new IntWritable(j.get() *
-            // i.get()));
-            // }
-            // }
         }
     }
 
@@ -90,13 +71,37 @@ public class GetPrime extends Configured implements Tool {
 
         FileInputFormat.setInputPaths(job, new Path(args[0]));
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
+/*
+        Job multiplicator = new Job(getConf());
+        multiplicator.setJarByClass(PrimeMultiplicator.class);
+        multiplicator.setJobName("PrimeMultiplicator");
+        multiplicator.setInputFormatClass(TextInputFormat.class);
+        multiplicator.setOutputKeyClass(LongWritable.class);
+        multiplicator.setOutputValueClass(Text.class);
 
+        multiplicator.setMapperClass(PrimeMultiplicator.Map.class);
+        multiplicator.setReducerClass(PrimeMultiplicator.Reduce.class);
+
+        multiplicator.setNumReduceTasks(1);
+
+        // Note that these are the default.
+        multiplicator.setInputFormatClass(TextInputFormat.class);
+        multiplicator.setOutputFormatClass(TextOutputFormat.class);
+        
+        multiplicator.getConfiguration().set("primemultiplicator.input.path", args[0]);
+
+        FileInputFormat.setInputPaths(job, new Path(args[1]));
+        FileOutputFormat.setOutputPath(job, new Path(args[2]));*/
+        
+        
         boolean success = job.waitForCompletion(true);
         return success ? 0 : 1;
     }
 
     public static void main(String[] args) throws Exception {
+        System.out.println(args[1]);
         int res = ToolRunner.run(new Configuration(), new GetPrime(), args);
+        res = ToolRunner.run(new Configuration(), new PrimeMultiplicator(), args);
         System.exit(res);
     }
 }
