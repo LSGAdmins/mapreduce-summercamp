@@ -65,7 +65,7 @@ public class PrimeMultiplicator extends Configured implements Tool {
 
     public int run(String[] args) throws Exception {
         FileSystem sys = FileSystem.get(getConf());
-        sys.delete(new Path(args[1]), true);
+        sys.delete(new Path(args[2]), true);
         Job job = new Job(getConf());
         job.setJarByClass(PrimeMultiplicator.class);
         job.setJobName("PrimeMultiplicator");
@@ -85,8 +85,8 @@ public class PrimeMultiplicator extends Configured implements Tool {
         
         job.getConfiguration().set("primemultiplicator.input.path", args[0]);
 
-        FileInputFormat.setInputPaths(job, new Path(args[0]));
-        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+        FileInputFormat.setInputPaths(job, new Path(args[1]));
+        FileOutputFormat.setOutputPath(job, new Path(args[2]));
 
         boolean success = job.waitForCompletion(true);
         return success ? 0 : 1;

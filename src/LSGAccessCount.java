@@ -103,7 +103,7 @@ public class LSGAccessCount extends Configured implements Tool {
         }
     }
 
-    public static class Reduce extends Reducer<Text, IntWritable, Text, IntWritable> {
+    public static class Reduce extends Reducer<Text, IntWritable, IntWritable, Text> {
 
         public void reduce(Text key, Iterable<IntWritable> values,
         Context context) throws IOException, InterruptedException {
@@ -113,7 +113,7 @@ public class LSGAccessCount extends Configured implements Tool {
             for (IntWritable val : values) {
                 sum += val.get();
             }
-            context.write(key, new IntWritable(sum));
+            context.write(new IntWritable(sum), key);
         }
     }
 
