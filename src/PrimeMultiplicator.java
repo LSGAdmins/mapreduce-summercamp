@@ -3,13 +3,10 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -19,16 +16,11 @@ import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
-import org.apache.hadoop.util.ToolRunner;
-
-import com.sun.corba.se.spi.orbutil.fsm.Input;
 
 public class PrimeMultiplicator extends Configured implements Tool {
     
     public static class Map extends
             Mapper<LongWritable, Text, LongWritable, Text> {
-        //private BufferedReader in;
-        //private DataInputStream d;
         private FileSystem fs;
         String inputPath;
         public void map(LongWritable key, Text value, Context context)
@@ -39,8 +31,10 @@ public class PrimeMultiplicator extends Configured implements Tool {
             BufferedReader in = new BufferedReader(new InputStreamReader(d));
             while((line = in.readLine()) != null) {
                 int val = Integer.valueOf(line.split("\\t")[1]);
-                context.write(new LongWritable(val*number), new Text(val + " | " + number));
+                context.write(new LongWritable(val * number), new Text(val + " | " + number));
             }
+            in.close();
+            d.close();
         }
         @Override
         protected void setup(Context context)
@@ -77,8 +71,6 @@ public class PrimeMultiplicator extends Configured implements Tool {
         job.setMapperClass(Map.class);
         job.setReducerClass(Reduce.class);
 
-        job.setNumReduceTasks(1);
-
         // Note that these are the default.
         job.setInputFormatClass(TextInputFormat.class);
         job.setOutputFormatClass(TextOutputFormat.class);
@@ -87,6 +79,7 @@ public class PrimeMultiplicator extends Configured implements Tool {
 
         FileInputFormat.setInputPaths(job, new Path(args[1]));
         FileOutputFormat.setOutputPath(job, new Path(args[2]));
+        FileInputFormat.setMaxInputSplitSize(job, 1000);
 
         boolean success = job.waitForCompletion(true);
         return success ? 0 : 1;

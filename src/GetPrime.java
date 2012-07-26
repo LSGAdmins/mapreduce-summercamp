@@ -39,29 +39,18 @@ public class GetPrime extends Configured implements Tool {
         }
     }
 
-    public static class CombinePrime extends
-            Reducer<Text, IntWritable, Text, IntWritable> {
-        public void reduce(Text key, Iterable<IntWritable> values,
-                Context context) throws IOException, InterruptedException {
-            for (IntWritable val : values)
-                context.write(new Text("prime"), val);
-        }
-    }
-
     public int run(String[] args) throws Exception {
         (FileSystem.get(getConf())).delete(new Path(args[1]), true);
         Job job = new Job(getConf());
         job.setJarByClass(GetPrime.class);
         job.setJobName("GetPrime");
 
-        //getConf().setInt("mapred.line.input.format.linespermap", 10);
         
         job.setInputFormatClass(TextInputFormat.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
 
         job.setMapperClass(Map.class);
-        job.setReducerClass(CombinePrime.class);
 
         job.setNumReduceTasks(1);
 
@@ -82,7 +71,6 @@ public class GetPrime extends Configured implements Tool {
             System.out.println("usage: hadoop wordcount.jar GetPrime inputpath primenumbers output");
             System.exit(100);
         }
-        System.out.println(args[1]);
         int res = ToolRunner.run(new Configuration(), new GetPrime(), args);
         res = ToolRunner.run(new Configuration(), new PrimeMultiplicator(), args);
         System.exit(res);
