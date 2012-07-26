@@ -28,14 +28,14 @@ public class GetPrime extends Configured implements Tool {
             else if (number == 1)
                 return;
             else if (number == 2) {
-                context.write(new Text("qwert1"), new IntWritable(number));
+                context.write(new Text("prime"), new IntWritable(number));
                 return;
             }
             for (int i = 2; i <= Math.sqrt(number); i++) {
                 if (number % i == 0)
                     return;
             }
-            context.write(new Text("qwert1"), new IntWritable(number));
+            context.write(new Text("prime"), new IntWritable(number));
         }
     }
 
