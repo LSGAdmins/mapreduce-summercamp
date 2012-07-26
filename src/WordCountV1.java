@@ -26,7 +26,7 @@ public class WordCountV1 extends Configured implements Tool {
             }
         }
     }
-
+//Test
     public static class Reduce extends
             Reducer<Text, IntWritable, Text, IntWritable> {
         public void reduce(Text key, Iterable<IntWritable> values,
