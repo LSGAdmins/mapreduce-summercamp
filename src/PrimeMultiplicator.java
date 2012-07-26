@@ -83,7 +83,7 @@ public class PrimeMultiplicator extends Configured implements Tool {
         job.setInputFormatClass(TextInputFormat.class);
         job.setOutputFormatClass(TextOutputFormat.class);
         
-        job.getConfiguration().set("primemultiplicator.input.path", args[0]);
+        job.getConfiguration().set("primemultiplicator.input.path", args[1] + "/part-r-00000");
 
         FileInputFormat.setInputPaths(job, new Path(args[1]));
         FileOutputFormat.setOutputPath(job, new Path(args[2]));
@@ -93,7 +93,8 @@ public class PrimeMultiplicator extends Configured implements Tool {
     }
 
     public static void main(String[] args) throws Exception {
-        int res = ToolRunner.run(new Configuration(), new PrimeMultiplicator(), args);
-        System.exit(res);
+        System.out.println("you cannot run this standalone, run GetPrime");
+        //int res = ToolRunner.run(new Configuration(), new PrimeMultiplicator(), args);
+        System.exit(100);
     }
 }

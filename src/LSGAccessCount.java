@@ -10,6 +10,7 @@ import java.util.Set;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.filecache.DistributedCache;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
@@ -103,7 +104,7 @@ public class LSGAccessCount extends Configured implements Tool {
         }
     }
 
-    public static class Reduce extends Reducer<Text, IntWritable, IntWritable, Text> {
+    public static class Reduce extends Reducer<Text, IntWritable, Text, IntWritable> {
 
         public void reduce(Text key, Iterable<IntWritable> values,
         Context context) throws IOException, InterruptedException {
@@ -113,11 +114,12 @@ public class LSGAccessCount extends Configured implements Tool {
             for (IntWritable val : values) {
                 sum += val.get();
             }
-            context.write(new IntWritable(sum), key);
+            context.write(key, new IntWritable(sum));
         }
     }
 
     public int run(String[] args) throws Exception {
+        (FileSystem.get(getConf())).delete(new Path(args[1]), true);
 
         Job job = new Job(getConf());
 
@@ -161,6 +163,10 @@ public class LSGAccessCount extends Configured implements Tool {
 
     public static void main(String[] args) throws Exception {
         int res = ToolRunner.run(new Configuration(), new LSGAccessCount(), args);
+        String[] args2 = new String[2];
+        args2[0] = args[1];
+        args2[1] = args[2];
+        res = ToolRunner.run(new Configuration(), new SortValue(), args2);
         System.exit(res);
     }
 
