@@ -92,6 +92,7 @@ public class LinkCounter extends Configured implements Tool {
             String[] split = line.split("href=\"");
             if(split.length > 1) {
                 split = split[1].split("\"");
+                split[0].replace("\t", "");
                 context.write(new Text(split[0]), one);
             }
             context.getCounter(Counters.INPUT_WORDS).increment(1);

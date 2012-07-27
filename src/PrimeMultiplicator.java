@@ -46,7 +46,7 @@ public class PrimeMultiplicator extends Configured implements Tool {
         }
     }
 
-
+/*
     public static class Reduce extends
             Reducer<LongWritable, Text, LongWritable, Text> {
         public void reduce(LongWritable key, Iterable<Text> values,
@@ -57,7 +57,7 @@ public class PrimeMultiplicator extends Configured implements Tool {
             }
             context.write(key, value);
         }
-    }
+    }*/
 
     public int run(String[] args) throws Exception {
         FileSystem sys = FileSystem.get(getConf());
@@ -71,7 +71,7 @@ public class PrimeMultiplicator extends Configured implements Tool {
         job.setOutputValueClass(Text.class);
 
         job.setMapperClass(Map.class);
-        job.setReducerClass(Reduce.class);
+        //job.setReducerClass(Reduce.class);
 
         job.setNumReduceTasks(0);
         // Note that these are the default.
