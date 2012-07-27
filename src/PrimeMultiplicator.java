@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.annotation.Inherited;
 
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.FileSystem;
@@ -45,6 +46,7 @@ public class PrimeMultiplicator extends Configured implements Tool {
         }
     }
 
+
     public static class Reduce extends
             Reducer<LongWritable, Text, LongWritable, Text> {
         public void reduce(LongWritable key, Iterable<Text> values,
@@ -71,6 +73,7 @@ public class PrimeMultiplicator extends Configured implements Tool {
         job.setMapperClass(Map.class);
         job.setReducerClass(Reduce.class);
 
+        job.setNumReduceTasks(0);
         // Note that these are the default.
         job.setInputFormatClass(TextInputFormat.class);
         job.setOutputFormatClass(TextOutputFormat.class);

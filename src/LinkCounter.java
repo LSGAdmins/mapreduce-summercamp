@@ -12,6 +12,7 @@ import org.apache.hadoop.filecache.DistributedCache;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
+
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
@@ -38,7 +39,6 @@ public class LinkCounter extends Configured implements Tool {
         }
 
         private final static IntWritable one = new IntWritable(1);
-        private Text word = new Text();
         private boolean caseSensitive = true;
         private Set<String> patternsToSkip = new HashSet<String>();
         private long numRecords = 0;
